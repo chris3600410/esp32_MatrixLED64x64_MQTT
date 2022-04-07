@@ -1,9 +1,8 @@
-//#include <SPI.h>
-//#include <Adafruit_GFX.h>
 #include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ArduinoOTA.h>
+#include "arduino_secrets.h"
 
 // HUB75E pinout
 // R1 | G1
@@ -15,15 +14,15 @@
 // CLK| LAT
 // OE | GND
 
-//int helligkeit = 90;                           // Helligkeit des DisplaysDefault Helligkeit 0 bis 255
-//int numberOfHorizontalDisplays = 12;     //Anzahl der Module Horizontal
-//int numberOfVerticalDisplays = 1;        //Anzahl der Module Vertikal
+///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 
-const char* ssid = "SSID";          //  your network SSID (name)
-const char* password  = "PASSWORT";   // your network password
-const char* mqtt_server = "192.168.178.110";
-const char* mqttUser = "loxberry";
-const char* mqttPassword = "PASSWORD";
+char ssid[] = SECRET_SSID;                 // your network SSID (name)
+char pass[] = SECRET_PASS;                 // your network password (use for WPA, or use as key for WEP)
+char mqtt_server[] = SECRET_MQTT_SERVER;   // your MQTT SERVER IP
+char mqtt_user[] = SECRET_MQTT_USER;       // your MQTT SERVER USER
+char mqtt_pass[] = SECRET_MQTT_PASS;       // your MQTT SERVER PASSWORD
+char ota_pass[] = SECRET_OTA_PASS;         // your OTA PASSWORD
+
 
 #define PANEL_RES_X 64      // Number of pixels wide of each INDIVIDUAL panel module. 
 #define PANEL_RES_Y 64     // Number of pixels tall of each INDIVIDUAL panel module.
@@ -42,7 +41,6 @@ uint16_t myBLUE = dma_display->color565(0, 0, 255);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-//int ScrollWait = 70;                  // Zeit in ms für Scroll Geschwindigkeit
 //int spacer = 1;                 // Länge eines Leerzeichens
 //int width = 5 + spacer;         // Schriftgröße
 
@@ -65,7 +63,7 @@ void setup_wifi() {
   Serial.println(ssid);
   WiFi.setHostname(hostname.c_str()); //define hostname
   //wifi_station_set_hostname( hostname.c_str() );
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid, pass);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -80,7 +78,7 @@ void setup_wifi() {
   Serial.println(WiFi.localIP());
 
   ArduinoOTA.setHostname("MatrixDisplay");
-  ArduinoOTA.setPassword("PASSWORD");
+  ArduinoOTA.setPassword(ota_pass);
   ArduinoOTA.begin();
 }
 
@@ -158,8 +156,7 @@ void reconnect() {
     clientId += String(random(0xffff), HEX);
 
     // Attempt to connect
-    if (client.connect(clientId.c_str(),mqttUser, mqttPassword)) {
-      //if (client.connect(clientId.c_str(),"mqttUser","mqttPassword")) {
+    if (client.connect(clientId.c_str(),mqtt_user, mqtt_pass)) {
       Serial.println("subscribe objects"); 
       client.subscribe("MatrixDisplay/zeile1");  
       client.subscribe("MatrixDisplay/zeile2");  
@@ -222,7 +219,7 @@ void printMatrix() {
   dma_display->setTextWrap(false);
   dma_display->setCursor(0, 0);
   dma_display->setTextColor(dma_display->color444(0,15,15));
-  dma_display->print((Zeile1));
+  dma_display->print(("Zeile1"));
   //Schreiben Zeile2
   dma_display->setTextWrap(false);
   dma_display->setCursor(0, 8);
