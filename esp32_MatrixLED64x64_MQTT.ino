@@ -44,16 +44,15 @@ PubSubClient client(espClient);
 //int spacer = 1;                 // Länge eines Leerzeichens
 //int width = 5 + spacer;         // Schriftgröße
 
-String hostname = "Matrixdisplay";
-//String Zeile1 = "...";
-//String Zeile2 = "...";
-uint32_t zeile1 = 0;
-uint32_t zeile2 = 0;
-uint32_t zeile3 = 0;
-uint32_t zeile4 = 0;
-uint32_t zeile5 = 0;
-uint32_t zeile6 = 0;
-uint32_t zeile7 = 0;
+String hostname = "INFOdisplay";
+String Zeile1 = "...INFO...";
+String Zeile2 = "..Display..";
+String Zeile3 = "";
+String Zeile4 = "";
+String Zeile5 = "";
+String Zeile6 = "";
+String Zeile7 = "";
+String Zeile8 = "";
 
 void setup_wifi() {
   delay(10);
@@ -62,7 +61,6 @@ void setup_wifi() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.setHostname(hostname.c_str()); //define hostname
-  //wifi_station_set_hostname( hostname.c_str() );
   WiFi.begin(ssid, pass);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -83,84 +81,73 @@ void setup_wifi() {
 }
 
 void MQTTCallback(char* topic, byte* payload, unsigned int length) {
-  String sTopic = String(topic);
-  
   String PayloadString = "";
   for (int i = 0; i < length; i++) { PayloadString = PayloadString + (char)payload[i]; }
 
   Serial.println("New message arrived");  
   Serial.println(topic);  
-  Serial.println(PayloadString);
-
-
-// Workaround to get int from payload
-  payload[length] = '\0';
-  uint32_t value = String((char*)payload).toInt();
-
-  if (sTopic == "MatrixDisplay/zeile1") {
-    zeile1 = value;
-  } else if (sTopic == "MatrixDisplay/zeile2") {
-    zeile2 = value;
-  } else if (sTopic == "MatrixDisplay/zeile3") {
-    zeile3 = value;
-  } else if (sTopic == "MatrixDisplay/zeile4") {
-    zeile4 = value;
-  } else if (sTopic == "MatrixDisplay/zeile5") {
-    zeile5 = value;
-  } else if (sTopic == "MatrixDisplay/zeile6") {
-    zeile6 = value;
-  } else if (sTopic == "MatrixDisplay/zeile7") {
-    zeile7 = value;
+  Serial.println(PayloadString);  
+  
+  if(strcmp(topic, "INFODisplay/zeile1") == 0) {  
+    Serial.println("clearScreen and set new Text Zeile1");
+    dma_display->clearScreen();      
+    Zeile1 = PayloadString;
   }
-
-  //valueChanged = true;
-
-
-
-    
-  
-  //if(strcmp(topic, "MatrixDisplay/zeile1") == 0) {  
-   // Serial.println("set new Text Zeile1");
-   // dma_display->clearScreen();      
-   // Zeile1 = PayloadString;
-   // dma_display->setTextWrap(false);
-   // dma_display->setCursor(0, 0);
-  //dma_display->setTextColor(dma_display->color444(0,15,15));
-    //dma_display->print(Zeile1);
-    //(strcmp(topic, "MatrixDisplay/zeile2") == 0);  
-    //Serial.println("set new Text Zeile2");
-    //dma_display->clearScreen();      
-   // Zeile2 = PayloadString;
-   // dma_display->setTextWrap(false);
-    //dma_display->setCursor(0, 8);
-  //dma_display->setTextColor(dma_display->color444(0,15,15));
-    //dma_display->print(Zeile2);
+  if(strcmp(topic, "INFODisplay/zeile2") == 0) {
+    Serial.println("clearScreen and set new Text Zeile2");
+    dma_display->clearScreen();      
+    Zeile2 = PayloadString;
   } 
- 
-  //if(strcmp(topic, "MatrixDisplay2/intensity") == 0) { 
-    //Serial.println("set new Intensity");      
-    //helligkeit = PayloadString.toInt();
-    //matrix.setIntensity(helligkeit);
-  //}  
+  if(strcmp(topic, "INFODisplay/zeile3") == 0) {
+    Serial.println("clearScreen and set new Text Zeile3");
+    dma_display->clearScreen();      
+    Zeile3 = PayloadString;
+  } 
+  if(strcmp(topic, "INFODisplay/zeile4") == 0) {
+    Serial.println("clearScreen and set new Text Zeile4");
+    dma_display->clearScreen();      
+    Zeile4 = PayloadString;
+  }   
+  if(strcmp(topic, "INFODisplay/zeile5") == 0) {
+    Serial.println("clearScreen and set new Text Zeile5");
+    dma_display->clearScreen();      
+    Zeile5 = PayloadString;
+  } 
+  if(strcmp(topic, "INFODisplay/zeile6") == 0) {
+    Serial.println("clearScreen and set new Text Zeile6");
+    dma_display->clearScreen();      
+    Zeile6 = PayloadString;
+  } 
+  if(strcmp(topic, "INFODisplay/zeile7") == 0) {
+    Serial.println("clearScreen and set new Text Zeile7");
+    dma_display->clearScreen();      
+    Zeile7 = PayloadString;
+  } 
+  if(strcmp(topic, "INFODisplay/zeile8") == 0) {
+    Serial.println("clearScreen and set new Text Zeile8");
+    dma_display->clearScreen();      
+    Zeile8 = PayloadString;
+  } 
   
-//  if(strcmp(topic, "MatrixDisplay2/scrollwait") == 0) { 
-    //Serial.println("set new ScrollWait");      
-    //ScrollWait = PayloadString.toInt();
-//  }  
-//}
+}
 
 void reconnect() {
   while (!client.connected()) {
     // Create a random client ID
-    String clientId = "ESP8266Client-";
+    String clientId = "ESP32Client-";
     clientId += String(random(0xffff), HEX);
 
     // Attempt to connect
     if (client.connect(clientId.c_str(),mqtt_user, mqtt_pass)) {
       Serial.println("subscribe objects"); 
-      client.subscribe("MatrixDisplay/zeile1");  
-      client.subscribe("MatrixDisplay/zeile2");  
-      client.subscribe("MatrixDisplay/zeile3");      
+      client.subscribe("INFODisplay/zeile1");  
+      client.subscribe("INFODisplay/zeile2");  
+      client.subscribe("INFODisplay/zeile3"); 
+      client.subscribe("INFODisplay/zeile4");
+      client.subscribe("INFODisplay/zeile5");
+      client.subscribe("INFODisplay/zeile6");
+      client.subscribe("INFODisplay/zeile7");
+      client.subscribe("INFODisplay/zeile8");     
     }
     else
     {
@@ -193,16 +180,6 @@ void setup() {
   dma_display->clearScreen();
   //dma_display->fillScreen(myWHITE);
   
-
-  
-  //delay(1000);
-
-//  matrix.setIntensity(helligkeit);
-  //for (int matrixIndex=0 ; matrixIndex < numberOfHorizontalDisplays ; matrixIndex++ )
-  //{
-   // matrix.setRotation(matrixIndex, 1);        //Erste DOT Matrix Drehen 
-  //}
-
   Serial.begin(115200);
   Serial.println("Boot display...");
 
@@ -212,28 +189,47 @@ void setup() {
 }
 
 void printMatrix() {
-
-  dma_display->setTextColor(dma_display->color444(15,15,15));
-      
+ 
   //Schreiben Zeile1
   dma_display->setTextWrap(false);
-  dma_display->setCursor(0, 0);
-  dma_display->setTextColor(dma_display->color444(0,15,15));
-  dma_display->print(("Zeile1"));
+  dma_display->setCursor(1, 1);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile1);
   //Schreiben Zeile2
   dma_display->setTextWrap(false);
-  dma_display->setCursor(0, 8);
-  dma_display->setTextColor(dma_display->color444(0,15,15));
-  dma_display->print("Zeile2");
-  
-      //client.loop(); 
-    //}
-
-    //matrix.write();
-    //delay(ScrollWait);
-  //}
-//}
-
+  dma_display->setCursor(1, 9);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile2);
+  //Schreiben Zeile3
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 17);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile3); 
+  //Schreiben Zeile4
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 25);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile4);
+  //Schreiben Zeile5
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 33);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile5);
+  //Schreiben Zeile6
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 41);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile6);
+  //Schreiben Zeile7
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 49);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile7);
+  //Schreiben Zeile8
+  dma_display->setTextWrap(false);
+  dma_display->setCursor(1, 49);
+  dma_display->setTextColor(dma_display->color444(15,15,15));
+  dma_display->print(Zeile8);
 }
 void loop() {
   if (!client.connected())  {
@@ -242,7 +238,7 @@ void loop() {
   
   client.loop(); 
   ArduinoOTA.handle();   
-  delay(500);
+  delay(200);
     
   printMatrix();      
 }
