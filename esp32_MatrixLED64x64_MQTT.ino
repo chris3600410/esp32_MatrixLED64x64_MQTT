@@ -75,7 +75,7 @@ void setup_wifi() {
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
 
-  ArduinoOTA.setHostname("MatrixDisplay");
+  ArduinoOTA.setHostname("INFODisplay");
   ArduinoOTA.setPassword(ota_pass);
   ArduinoOTA.begin();
 }
@@ -196,37 +196,37 @@ void printMatrix() {
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile1);
   //Schreiben Zeile2
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 8);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile2);
   //Schreiben Zeile3
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 16);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile3); 
   //Schreiben Zeile4
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 24);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile4);
   //Schreiben Zeile5
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 32);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile5);
   //Schreiben Zeile6
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 40);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile6);
   //Schreiben Zeile7
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 48);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile7);
   //Schreiben Zeile8
-  dma_display->setTextWrap(false);
+  //dma_display->setTextWrap(false);
   dma_display->setCursor(0, 56);
   dma_display->setTextColor(dma_display->color444(15,15,15));
   dma_display->print(Zeile8);
